@@ -19,6 +19,9 @@ import {
 } from '@loopback/rest';
 import {Item} from '../models';
 import {ItemRepository} from '../repositories';
+import {authenticate} from '@loopback/authentication';
+
+@authenticate('jwt') 
 
 export class ItemController {
   constructor(
