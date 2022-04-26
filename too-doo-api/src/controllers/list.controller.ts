@@ -1,33 +1,27 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
+  del, get,
+  getModelSchemaRef, param, patch, post, put, requestBody,
+  response
 } from '@loopback/rest';
 import {List} from '../models';
 import {ListRepository} from '../repositories';
-import {authenticate} from '@loopback/authentication';
 
-@authenticate('jwt') 
+@authenticate('jwt')
 
 export class ListController {
   constructor(
     @repository(ListRepository)
-    public listRepository : ListRepository,
-  ) {}
+    public listRepository: ListRepository,
+  ) { }
 
   @post('/lists')
   @response(200, {
@@ -40,7 +34,7 @@ export class ListController {
         'application/json': {
           schema: getModelSchemaRef(List, {
             title: 'NewList',
-            
+
           }),
         },
       },
@@ -77,25 +71,6 @@ export class ListController {
     @param.filter(List) filter?: Filter<List>,
   ): Promise<List[]> {
     return this.listRepository.find(filter);
-  }
-
-  @patch('/lists')
-  @response(200, {
-    description: 'List PATCH success count',
-    content: {'application/json': {schema: CountSchema}},
-  })
-  async updateAll(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(List, {partial: true}),
-        },
-      },
-    })
-    list: List,
-    @param.where(List) where?: Where<List>,
-  ): Promise<Count> {
-    return this.listRepository.updateAll(list, where);
   }
 
   @get('/lists/{id}')

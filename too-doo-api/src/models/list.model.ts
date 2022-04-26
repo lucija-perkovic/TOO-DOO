@@ -1,5 +1,6 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
-import {Item} from './item.model';
+import {User, UserWithRelations} from '@loopback/authentication-jwt/dist/models/user.model';
+import {belongsTo, Entity, hasMany, model, property} from '@loopback/repository';
+import {Item, ItemWithRelations} from './item.model';
 
 @model()
 export class List extends Entity {
@@ -19,10 +20,8 @@ export class List extends Entity {
   @hasMany(() => Item)
   items: Item[];
 
-  @property({
-    type: 'string',
-  })
-  userId?: string;
+  @belongsTo(() => User)
+  userId: string;
 
   constructor(data?: Partial<List>) {
     super(data);
@@ -30,7 +29,8 @@ export class List extends Entity {
 }
 
 export interface ListRelations {
-  // describe navigational properties here
+  items?: ItemWithRelations;
+  user?: UserWithRelations;
 }
 
 export type ListWithRelations = List & ListRelations;

@@ -1,7 +1,7 @@
-import {inject, Getter} from '@loopback/core';
-import {DefaultCrudRepository, repository, HasManyRepositoryFactory} from '@loopback/repository';
+import {Getter, inject} from '@loopback/core';
+import {DefaultCrudRepository, HasManyRepositoryFactory, repository} from '@loopback/repository';
 import {DbDataSource} from '../datasources';
-import {List, ListRelations, Item} from '../models';
+import {Item, List, ListRelations} from '../models';
 import {ItemRepository} from './item.repository';
 
 export class ListRepository extends DefaultCrudRepository<
@@ -11,7 +11,6 @@ export class ListRepository extends DefaultCrudRepository<
 > {
 
   public readonly items: HasManyRepositoryFactory<Item, typeof List.prototype.uuid>;
-
   constructor(
     @inject('datasources.db') dataSource: DbDataSource, @repository.getter('ItemRepository') protected itemRepositoryGetter: Getter<ItemRepository>,
   ) {

@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {List, ListWithRelations} from './list.model';
 
 @model()
 export class Item extends Entity {
@@ -16,9 +17,12 @@ export class Item extends Entity {
   name: string;
 
   @property({
-    type: 'string',
+    type: 'boolean',
   })
-  listId?: string;
+  isComplete?: boolean;
+
+  @belongsTo(() => List)
+  listId: string;
 
   constructor(data?: Partial<Item>) {
     super(data);
@@ -26,7 +30,7 @@ export class Item extends Entity {
 }
 
 export interface ItemRelations {
-  // describe navigational properties here
+  list: ListWithRelations;
 }
 
 export type ItemWithRelations = Item & ItemRelations;
