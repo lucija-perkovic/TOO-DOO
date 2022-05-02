@@ -8,6 +8,6 @@ const sagaMiddleware = createSagaMiddleware();
 
 export const store = configureStore({
     reducer: rootReducer,
-    middleware: [...getDefaultMiddleware(), sagaMiddleware]
+    middleware: [sagaMiddleware]
 })
 sagaMiddleware.run(rootSaga)

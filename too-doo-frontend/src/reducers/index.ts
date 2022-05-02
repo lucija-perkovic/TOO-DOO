@@ -1,16 +1,19 @@
 import { combineReducers } from 'redux';
-import listReducer, { ListItemState } from './listReducer';
+import listReducer, { ListState } from './listReducer';
+import uiReducer, { UiState } from './uiReducer';
 import userReducer, { UserDataResponseState } from './userReducer';
 
 export interface AppState {
-  lists: ListItemState
+  lists: ListState
   user: UserDataResponseState
+  ui: UiState
 }
 
 const createRootReducer = () =>
   combineReducers({
-    list: listReducer,
-    user: userReducer
+    lists: listReducer,
+    user: userReducer,
+    ui: uiReducer
   });
 
 export default createRootReducer;

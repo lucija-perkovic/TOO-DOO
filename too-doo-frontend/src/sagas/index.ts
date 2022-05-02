@@ -3,7 +3,7 @@ import listSaga from "./listSaga";
 import userSaga from "./userSaga";
 
 function* rootSaga() {
-    yield fork(listSaga),
+    yield fork(listSaga)
     yield fork(userSaga)
 }
 

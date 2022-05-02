@@ -13,12 +13,16 @@ client.interceptors.response.use(
     }
 );
 client.interceptors.request.use(function (config) {
-    const token = store.getState().user.token;
+    const userData = localStorage.getItem('userData')
+    let storedData : any;
+    if(userData) {
+      storedData = JSON.parse(userData)
+    }
     if (config.headers === undefined) {
         config.headers = {};
       }
-    else {
-        config.headers.Authorization =  `Bearer ${token}`;
+    else if(storedData) {
+        config.headers.Authorization =  `Bearer ${storedData.token}`;
     }
     return config;
 });
@@ -36,13 +40,24 @@ export async function addUser(userCreateData : UserCreateRequest) {
 
 export async function login(userData : UserDataRequest) {
     const response = await client.post("/users/login", userData);
-    sessionStorage.setItem('jwtToken', response.data.token);
-    console.log(sessionStorage)
     return response.data;
 }
 
 export async function getListsFromUser(userId : string) {
-    console.log("BACKEND")
     const response = await client.get(`/users/${userId}/lists`);
-    return response.data
+    return response
+}
+
+export async function addItemInAList(name: string, listId: string, isComplete: boolean) {
+    const response = await client.post(MainPaths.Items, {
+        name: name,
+        listId: listId,
+        isComplete: isComplete
+    });
+    return response
+}
+
+export async function deleteList(listId : string) {
+    const response = await client.delete(`${MainPaths.Lists}/${listId}`);
+    return response
 }

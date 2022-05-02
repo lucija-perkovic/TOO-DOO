@@ -3,6 +3,7 @@ import { LOGIN_USER_SUCCESS } from "../actions/userActions";
 import { CustomAction } from "../models/common";
 import { List, ListItem } from "../models/list";
 import { UserDataResponse } from "../models/user";
+import { AuthContext } from "../shared/context/Auth/auth-context";
 
 
 export interface UserDataResponseState {
@@ -15,10 +16,12 @@ const initialState: UserDataResponseState = {
     userId: ''
 }
 
-function listReducer(state: UserDataResponseState | undefined, action: CustomAction): UserDataResponseState {
+function userReducer(state: UserDataResponseState | undefined, action: CustomAction): UserDataResponseState {
+
     if(typeof state === 'undefined') {
         return initialState;
     }
+
 
     switch(action.type) {
         case LOGIN_USER_SUCCESS:
@@ -32,4 +35,4 @@ function listReducer(state: UserDataResponseState | undefined, action: CustomAct
     }
 }
 
-export default listReducer;
+export default userReducer;

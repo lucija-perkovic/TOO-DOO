@@ -1,5 +1,6 @@
 export interface Item {
-    uuid: string;
+    uuid?: string;
     name: string;
     isComplete: boolean;
+    listId: string;
 }

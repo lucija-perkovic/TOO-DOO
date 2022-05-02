@@ -1,29 +1,46 @@
+import { Button, Card, CircularProgress, Grid, Paper } from '@mui/material';
 import React, { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { requestLoadListsFromUser } from '../../actions/listActions';
+import { LOAD_LISTS_FROM_USER_REQUEST, requestLoadListsFromUser } from '../../actions/listActions';
+import { ListItem } from '../../models/list';
 import { AppState } from '../../reducers';
+import { checkIfLoading } from '../../reducers/uiReducer';
 import { AuthContext } from '../../shared/context/Auth/auth-context';
-
+import TodoList from './TodoList';
 
 function Home() {
     const dispatch = useDispatch();
     const auth = useContext(AuthContext);
-    
-    console.log(auth.userId)
-    const userId = useSelector((state : AppState) => state.user.userId);
-
     useEffect(() => {
-        dispatch(requestLoadListsFromUser(userId))
-    })
-    const lists = useSelector((state : AppState) => state.lists);
+        dispatch(requestLoadListsFromUser(auth.userId))
+    }, [dispatch, auth.userId])
+    
+    const lists : ListItem[] = useSelector((state: AppState) => state.lists.lists);
+    
+    const isLoading = useSelector((state: AppState) => checkIfLoading(state, LOAD_LISTS_FROM_USER_REQUEST));
 
-    useEffect(()=> {
-        if(lists) {
-            console.log(lists)
-        }
-    }, [lists])
     return (
-        <h1>LLLL</h1>
+        <Paper elevation={3} sx={{m:2, p:2}}>
+            <Button variant="contained" color="success">
+            NEW LIST
+            </Button>
+            {isLoading  ?
+                <Grid item>
+                    <CircularProgress />
+                </Grid> :
+                <Grid container>
+                    {
+                        lists?.map((list: ListItem) => (
+                            <Grid item key={list.listName} xs={true} sm={5} md={3}>
+                                <TodoList listItem={list} />
+                            </Grid>
+                        ))
+                    }
+                </Grid>
+
+            }
+        </Paper>
+
     );
 }
 

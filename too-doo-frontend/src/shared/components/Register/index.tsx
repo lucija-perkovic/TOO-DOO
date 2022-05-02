@@ -1,9 +1,10 @@
 import React from "react";
-import { Box, Button, Card, FormControl, FormGroup, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from "@mui/material";
+import { Box, Button, Card, FormControl, FormGroup, IconButton, InputAdornment, InputLabel, OutlinedInput, Paper, TextField } from "@mui/material";
 import { UserCreateRequest } from "../../../models/user";
 import { Form, Formik } from "formik";
 import { addUser } from "../../../services/BackendService";
 import * as yup from 'yup';
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = yup.object({
     email: yup
@@ -22,8 +23,9 @@ function Login() {
         email: '',
         password: ''
     }
+    const navigate = useNavigate();
     return (
-        <Card>
+        <Paper elevation={3} sx={{m:2, p:2}}>
             <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values: UserCreateRequest, { resetForm }) => {
                 addUser(values);
                 resetForm();
@@ -79,7 +81,7 @@ function Login() {
                 </Form>
                 )}
             </Formik>
-        </Card>
+        </Paper>
     )
 }
 

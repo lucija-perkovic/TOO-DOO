@@ -6,7 +6,8 @@ export interface List {
 }
 
 export interface ListItem {
-    listId: string;
-    listName: string;
     items : Item[]
+    listId: string;
+    userId: string;
+    listName: string;
 }

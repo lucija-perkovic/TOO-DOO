@@ -1,12 +1,10 @@
 import React, { useContext } from "react";
-import { Box, Button, Card, FormControl, FormGroup, IconButton, InputAdornment, InputLabel, OutlinedInput, Stack, TextField } from "@mui/material";
-import { UserDataRequest, UserDataResponse } from "../../../models/user";
+import { Box, Button, Card, FormControl, Paper, TextField } from "@mui/material";
+import { UserDataRequest } from "../../../models/user";
 import { Form, Formik } from "formik";
 import * as yup from 'yup';
 import { AuthContext } from "../../context/Auth/auth-context";
-import { useNavigate } from "react-router";
-import { useDispatch } from "react-redux";
-import { requestLoginUser } from "../../../actions/userActions";
+import { login } from "../../../services/BackendService";
 
 const validationSchema = yup.object({
     email: yup
@@ -20,16 +18,15 @@ const validationSchema = yup.object({
 });
 
 function Login() {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
     const initialValues = {
         email: '',
         password: ''
     }
+    const auth = useContext(AuthContext);
     return (
-        <Card>
-            <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={async (values: UserDataRequest, { resetForm }) => {
-                await dispatch(requestLoginUser(values));
+        <Paper elevation={3} sx={{m:2, p:2}}>
+            <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values: UserDataRequest, { resetForm }) => {
+                login(values).then(res => auth.login(res.token, res.userId));
                 resetForm();
             }}>
                 {({ values, handleChange, handleSubmit, resetForm }) => (
@@ -64,14 +61,14 @@ function Login() {
                                     name="password"
                                 />
                             </FormControl>
-                            <Button type="submit" variant="contained" sx={{ m: 1, width: '25ch' }} onClick={() => navigate("/home")}>
+                            <Button type="submit" variant="contained" sx={{ m: 1, width: '25ch' }}>
                                 Login
                             </Button>
                         </Box>
                     </Form>
                 )}
             </Formik>
-        </Card>
+        </Paper>
 
     )
 }
