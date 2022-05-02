@@ -13,6 +13,7 @@ import Home from './pages/Home';
 import { AuthContext } from './shared/context/Auth/auth-context';
 import { useSelector } from 'react-redux';
 import { AppState } from './reducers';
+import List from './pages/List';
 let logoutTimer : any;
 const App = () => {
   const [token, setToken] = useState<string>('');
@@ -81,10 +82,12 @@ const App = () => {
           token ? 
             <>
               <Route path='/login' element={<Navigate to='/home' />} />
+              <Route path='/home/:id' element={<List/>}/>
               <Route path='/*' element={<Home />} />
             </>
             :
             <>
+              <Route path='/home/:id' element={<List/>}/>
               <Route path='/login' element={<Login />} />
               <Route path='/signup' element={<Register />} />
               <Route path='/*' element={<Navigate to='/login' />} />

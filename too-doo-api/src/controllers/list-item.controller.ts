@@ -20,9 +20,7 @@ import {
   Item,
 } from '../models';
 import {ListRepository} from '../repositories';
-import {authenticate} from '@loopback/authentication';
 
-@authenticate('jwt') 
 
 export class ListItemController {
   constructor(

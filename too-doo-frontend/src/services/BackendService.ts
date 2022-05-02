@@ -1,7 +1,5 @@
 import axios from "axios";
 import { UserCreateRequest, UserDataRequest } from "../models/user";
-import { AuthContext } from "../shared/context/Auth/auth-context";
-import { store } from "../store";
 
 const baseURL = "http://localhost:3000";
 const client = axios.create({ baseURL });
@@ -61,3 +59,36 @@ export async function deleteList(listId : string) {
     const response = await client.delete(`${MainPaths.Lists}/${listId}`);
     return response
 }
+
+export async function addNewList(userId: string) {
+    const response = await client.post(`${MainPaths.Lists}`, {
+        userId: userId,
+        name: 'Untitled'
+    })
+    return response
+}
+
+export async function patchAList(listId: string, listName: string) {
+    const response = await client.patch(`${MainPaths.Lists}/${listId}`, {
+        name: listName
+    });
+    return response
+}
+
+export async function getList(listId: string) {
+    const response = await client.get(`${MainPaths.Lists}/${listId}`);
+    return response.data
+}
+
+export async function patchAnItem(itemId: string, isComplete: boolean) {
+    const response = await client.patch(`${MainPaths.Items}/${itemId}`, {
+        isComplete: isComplete
+    })
+    return response
+}
+
+export async function getItemsFromList(listId: string) {
+    const response = await client.get(`${MainPaths.Lists}/${listId}/items`);
+    return response.data
+}
+

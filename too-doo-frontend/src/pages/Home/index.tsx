@@ -1,7 +1,7 @@
 import { Button, Card, CircularProgress, Grid, Paper } from '@mui/material';
 import React, { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { LOAD_LISTS_FROM_USER_REQUEST, requestLoadListsFromUser } from '../../actions/listActions';
+import { LOAD_LISTS_FROM_USER_REQUEST, requestAddNewList, requestLoadListsFromUser } from '../../actions/listActions';
 import { ListItem } from '../../models/list';
 import { AppState } from '../../reducers';
 import { checkIfLoading } from '../../reducers/uiReducer';
@@ -21,7 +21,7 @@ function Home() {
 
     return (
         <Paper elevation={3} sx={{m:2, p:2}}>
-            <Button variant="contained" color="success">
+            <Button variant="contained" color="success" onClick={() => dispatch(requestAddNewList(auth.userId))}>
             NEW LIST
             </Button>
             {isLoading  ?
@@ -31,13 +31,12 @@ function Home() {
                 <Grid container>
                     {
                         lists?.map((list: ListItem) => (
-                            <Grid item key={list.listName} xs={true} sm={5} md={3}>
+                            <Grid item key={list.listId} xs={true} sm={5} md={3}>
                                 <TodoList listItem={list} />
                             </Grid>
                         ))
                     }
                 </Grid>
-
             }
         </Paper>
 

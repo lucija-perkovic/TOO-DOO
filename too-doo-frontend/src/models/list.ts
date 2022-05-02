@@ -7,7 +7,7 @@ export interface List {
 
 export interface ListItem {
     items : Item[]
-    listId: string;
+    listId?: string;
     userId: string;
     listName: string;
 }

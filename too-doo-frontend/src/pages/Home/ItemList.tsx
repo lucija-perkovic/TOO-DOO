@@ -1,51 +1,38 @@
 import { Item } from "../../models/item";
-import React from "react";
-import { Checkbox, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
-import { values } from "lodash";
-import { Form, Formik } from "formik";
-import { useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
+import { patchAnItem } from "../../services/BackendService";
 
 
 interface ItemListProps {
   item: Item,
-  labelId: string
+  labelId: string,
+  canEdit: boolean
 }
 
-function ItemList({ item, labelId }: ItemListProps) {
-  const initialValues: Item = {
-    name: item.name,
-    listId: item.listId,
-    isComplete: item.isComplete,
+function ItemList({ item, labelId, canEdit }: ItemListProps) {
+  const [checked, setChecked] = useState<boolean>(item.isComplete);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if(canEdit) {
+      setChecked(e.target.checked);
+      if(item.uuid) {
+        patchAnItem(item.uuid, e.target.checked);
+      }
+    }
   }
-  const dispatch = useDispatch();
+
   return (
-    <Formik initialValues={initialValues} onSubmit={(values: Item, { resetForm }) => {
-      resetForm();
-    }}>
-      {({ values, handleChange, handleSubmit, resetForm }) => (
-        <Form onSubmit={handleSubmit}>
-          <ListItem
-            key={item.uuid}
-            disablePadding
-          >
-            <ListItemButton dense>
-              <ListItemIcon role={undefined}>
-                <Checkbox
-                  edge="start"
-                  checked={values.isComplete}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{ 'aria-labelledby': labelId }}
-                  onChange={handleChange}
-                  name="isComplete"
-                />
-              </ListItemIcon>
-              <ListItemText id={labelId} primary={item.name} />
-            </ListItemButton>
-          </ListItem>
-        </Form>
-      )}
-    </Formik>
+    <FormGroup row>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={canEdit ? checked : item.isComplete }
+            onChange={handleChange}
+          />
+        }
+        label={item.name}
+      />
+    </FormGroup>
   )
 
 }

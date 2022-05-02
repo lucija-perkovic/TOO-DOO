@@ -15,7 +15,6 @@ import {
 import {List} from '../models';
 import {ListRepository} from '../repositories';
 
-@authenticate('jwt')
 
 export class ListController {
   constructor(
