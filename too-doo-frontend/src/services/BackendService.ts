@@ -1,4 +1,7 @@
 import axios from "axios";
+import { List } from "lodash";
+import { Item } from "../models/item";
+import { ListItem } from "../models/list";
 import { UserCreateRequest, UserDataRequest } from "../models/user";
 
 const baseURL = "http://localhost:3000";
@@ -55,15 +58,30 @@ export async function addItemInAList(name: string, listId: string, isComplete: b
     return response
 }
 
+export async function addItemsToList(listId: string, items: Item[]) {
+    const itemsR : Item[] = [];
+    items.forEach(item => {
+        if(!item.uuid) {
+            itemsR.push({
+                name: item.name,
+                isComplete: item.isComplete,
+                listId: listId
+            })
+        }
+    })
+    const response = await client.post(`/lists/${listId}/items`, itemsR);
+    return response
+}
+
 export async function deleteList(listId : string) {
     const response = await client.delete(`${MainPaths.Lists}/${listId}`);
     return response
 }
 
-export async function addNewList(userId: string) {
+export async function addNewList(userId: string, listName: string) {
     const response = await client.post(`${MainPaths.Lists}`, {
         userId: userId,
-        name: 'Untitled'
+        name: listName
     })
     return response
 }

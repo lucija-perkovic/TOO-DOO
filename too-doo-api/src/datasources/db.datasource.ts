@@ -2,7 +2,7 @@ import {inject, lifeCycleObserver, LifeCycleObserver} from '@loopback/core';
 import {juggler} from '@loopback/repository';
 
 const config = {
-  name: 'db',
+  name: 'too-doo-db',
   connector: 'mongodb',
   url: '',
   host: '127.0.0.1',

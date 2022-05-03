@@ -1,11 +1,13 @@
 import { Add, Delete, Edit } from "@mui/icons-material";
-import { Button, Card, CardActions, CardContent, CardHeader, Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, List, ListItemButton, ListItemText, TextField, Typography } from "@mui/material";
-import { Form, Formik } from "formik";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { requestAddItemInAList } from "../../actions/listActions";
+import { Button, Card, CardActions, CardContent, CardHeader, FormControl, IconButton, InputAdornment, List, TextField } from "@mui/material";
+import React, { useContext, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { requestDeleteList, requestLoadListsFromUser } from "../../actions/listActions";
 import { Item } from "../../models/item";
 import { ListItem } from "../../models/list";
+import { AppState } from "../../reducers";
+import { checkIfLoading } from "../../reducers/uiReducer";
+import { AuthContext } from "../../shared/context/Auth/auth-context";
 import ItemList from "./ItemList";
 import ListDialog from "./ListDialog";
 
@@ -15,17 +17,15 @@ interface TodoListProps {
 }
 
 function TodoList({ listItem }: TodoListProps) {
-  const initialValues: Item = {
-    name: '',
-    isComplete: false,
-    listId: listItem.listId
-  }
-  const dispatch = useDispatch();
-  const [listName, setListName] = useState<string>(listItem.listName);
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const auth = useContext(AuthContext);
   const handleDelete = () => {
     if (window.confirm(`Are you sure you want to delete ${listItem.listName} list?`)) {
-      /* deleteList(listItem.listId); */
+      if(listItem.listId) {
+        dispatch(requestDeleteList(listItem.listId));
+        dispatch(requestLoadListsFromUser(auth.userId));
+      }
     }
   }
   const handleEdit = () => {
@@ -42,7 +42,6 @@ function TodoList({ listItem }: TodoListProps) {
     navigator.clipboard.writeText(`${ahref}/${listItem.listId}`)
     window.alert("Copied the link to clipboard!")
   }
-
   return (
     <Card sx={{ maxWidth: 345, m: 1.25 }} raised>
       <CardHeader
@@ -59,29 +58,11 @@ function TodoList({ listItem }: TodoListProps) {
         }
       />
       <CardContent>
-        <Formik initialValues={initialValues} onSubmit={(values: Item, { resetForm }) => {
-          if(values.listId) {
-            dispatch(requestAddItemInAList(values.name, values.listId, values.isComplete));
-          }
-          resetForm();
-        }}>
-          {({ values, handleChange, handleSubmit, resetForm }) => (
-            <Form onSubmit={handleSubmit}>
-              <IconButton size="small" type="submit" color="success">
-                <Add />
-              </IconButton>
-              <FormControl variant="standard">
-                <TextField id="new-item-add" placeholder="Add new item" variant="standard" value={values.name} name="name" onChange={handleChange} />
-              </FormControl>
-            </Form>
-          )}
-        </Formik>
         <List>
           {
             listItem.items?.map((item: Item) => {
-              const labelId = `checkbox-list-label-${item.uuid}`;
               return (
-                <ItemList key={item.uuid} item={item} labelId={labelId} canEdit={true} />
+                <ItemList key={item.uuid} item={item} canEdit={true} />
               )
               }
             )
@@ -91,7 +72,7 @@ function TodoList({ listItem }: TodoListProps) {
           <Button size="small" variant="contained" onClick={handleShare}>Share</Button>
         </CardActions>
       </CardContent>
-      <ListDialog open={openEditDialog} handleClose={handleClose} title={"Edit"}/>
+      <ListDialog open={openEditDialog} handleClose={handleClose} title={"Edit"} list={listItem}/>
     </Card>
   );
 }

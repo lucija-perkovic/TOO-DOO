@@ -1,17 +1,18 @@
 import { Card, CardContent, CardHeader } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Item } from "../../models/item";
-import { ListItem } from "../../models/list";
-import { getItemsFromList, getList } from "../../services/BackendService";
+import { Item } from "../../../models/item";
+import { ListItem } from "../../../models/list";
+import { getItemsFromList, getList } from "../../../services/BackendService";
 import { List as ListMUI} from "@mui/material";
-import ItemList from "../Home/ItemList";
+import ItemList from "../../../pages/Home/ItemList";
 
 
 function List() {
-    const href = window.location.pathname;
 
+    const href = window.location.pathname;
     const [id, setId] = useState<string>();
     const [list, setList] = useState<ListItem>();
+    
     useEffect(() => {
         setId(href.split("/")[2]);
     }, [id, href])
@@ -39,16 +40,12 @@ function List() {
       <CardContent>
         <ListMUI>
           {
-
             list?.items?.map((item: Item) => {
-              const labelId = `checkbox-list-label-${item.uuid}`;
               return (
-                <ItemList key={item.uuid} item={item} labelId={labelId} canEdit={false} />
+                <ItemList key={item.uuid} item={item} canEdit={false} />
               )
             }
             )
-
-
           }
         </ListMUI>
       </CardContent>

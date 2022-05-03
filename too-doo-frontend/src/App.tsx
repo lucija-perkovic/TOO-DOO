@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from 'react';
 import {
   BrowserRouter,
   Navigate,
-  Outlet,
   Route,
   Routes,
 } from 'react-router-dom';
@@ -11,10 +10,10 @@ import Header from './shared/components/Header';
 import Register from './shared/components/Register';
 import Home from './pages/Home';
 import { AuthContext } from './shared/context/Auth/auth-context';
-import { useSelector } from 'react-redux';
-import { AppState } from './reducers';
-import List from './pages/List';
+import List from './shared/components/List';
+
 let logoutTimer : any;
+
 const App = () => {
   const [token, setToken] = useState<string>('');
   const [tokenExpirationDate, setTokenExpirationDate] = useState<Date|null>();

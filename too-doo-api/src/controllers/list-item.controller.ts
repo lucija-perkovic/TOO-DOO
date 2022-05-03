@@ -13,18 +13,22 @@ import {
   param,
   patch,
   post,
+  put,
   requestBody,
 } from '@loopback/rest';
 import {
   List,
   Item,
 } from '../models';
-import {ListRepository} from '../repositories';
+import {ItemRepository, ListRepository} from '../repositories';
+import { ListItemsSchema } from './user-list.controller';
 
 
 export class ListItemController {
   constructor(
     @repository(ListRepository) protected listRepository: ListRepository,
+    @repository(ItemRepository) protected itemRepository: ItemRepository,
+
   ) { }
 
   @get('/lists/{id}/items', {
@@ -107,5 +111,25 @@ export class ListItemController {
     @param.query.object('where', getWhereSchemaFor(Item)) where?: Where<Item>,
   ): Promise<Count> {
     return this.listRepository.items(id).delete(where);
+  }
+
+  @post('/lists/{id}/items')
+  async put(
+    @param.path.string('id') id: string,
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: {
+            type: 'array',
+            items: getModelSchemaRef(Item, {
+              title: 'NewItems',
+            }),
+          }
+        },
+      },
+    })  items : Item[],
+  ): Promise<Item[]> {
+    console.log("TRUE")
+    return this.itemRepository.createAll(items)
   }
 }

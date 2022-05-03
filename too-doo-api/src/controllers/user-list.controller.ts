@@ -82,7 +82,6 @@ export class UserListController {
       lists.push(listItems)
       return true
     }))
-    console.log({lists})
     return {lists}
   }
 }

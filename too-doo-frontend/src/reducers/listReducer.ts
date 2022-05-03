@@ -18,7 +18,6 @@ function listReducer(state: ListState | undefined, action: CustomAction): ListSt
 
     switch(action.type) {
         case LOAD_LISTS_FROM_USER_SUCCESS:  
-            console.log(action.payload)       
             return {
                 ...state,
                 lists: action.payload.lists

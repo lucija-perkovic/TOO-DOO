@@ -6,11 +6,10 @@ import { patchAnItem } from "../../services/BackendService";
 
 interface ItemListProps {
   item: Item,
-  labelId: string,
   canEdit: boolean
 }
 
-function ItemList({ item, labelId, canEdit }: ItemListProps) {
+function ItemList({ item, canEdit }: ItemListProps) {
   const [checked, setChecked] = useState<boolean>(item.isComplete);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if(canEdit) {

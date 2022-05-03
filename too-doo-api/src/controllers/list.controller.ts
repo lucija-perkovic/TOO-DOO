@@ -13,13 +13,14 @@ import {
   response
 } from '@loopback/rest';
 import {List} from '../models';
-import {ListRepository} from '../repositories';
+import {ItemRepository, ListRepository} from '../repositories';
 
 
 export class ListController {
   constructor(
     @repository(ListRepository)
     public listRepository: ListRepository,
+    @repository(ItemRepository) public itemRepository: ItemRepository
   ) { }
 
   @post('/lists')
@@ -122,6 +123,10 @@ export class ListController {
     description: 'List DELETE success',
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
+    const items = this.itemRepository.find({where: {listId: id}});
+    (await items).forEach(item => {
+      this.itemRepository.delete(item)
+    })
     await this.listRepository.deleteById(id);
   }
 }
