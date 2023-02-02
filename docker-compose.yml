@@ -1,26 +1,28 @@
 version: '3.8'
 services:
-  node:
-    image: backend
-    build:
-      context: './too-doo-api'
-      dockerfile: Dockerfile
-    ports:
-      - 80:3000
-    volumes:
-      - .:/usr/src/app
   mongodb_service:
     image: mongo
     ports:
       - 27017:27017
     volumes:
         - mongodb:/data/db
+  node:
+    image: backend
+    build:
+      context: './too-doo-api'
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongodb_service
   frontend:
     image: frontend
     build:
       context: './too-doo-frontend'
       dockerfile: Dockerfile
     ports:
-      - 3000:3000
+      - 3001:3000
+    depends_on:
+      - node
 volumes:
   mongodb:

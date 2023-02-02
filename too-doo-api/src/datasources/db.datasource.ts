@@ -5,7 +5,7 @@ const config = {
   name: 'too-doo-db',
   connector: 'mongodb',
   url: '',
-  host: '127.0.0.1',
+  host: "mongodb_service",
   port: 27017,
   user: '',
   password: '',

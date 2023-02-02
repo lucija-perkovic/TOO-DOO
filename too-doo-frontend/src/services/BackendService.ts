@@ -5,8 +5,10 @@ import { ListItem } from "../models/list";
 import { UserCreateRequest, UserDataRequest } from "../models/user";
 
 const baseURL = "http://localhost:3000";
-const client = axios.create({ baseURL });
-
+const client = axios.create({ 
+    baseURL : baseURL,
+    headers: {'Access-Control-Allow-Origin': '*'}
+});
 client.interceptors.response.use(
     (response) => response,
     (error) => {
